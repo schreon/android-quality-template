@@ -1,4 +1,7 @@
 apply plugin: 'android'
+apply plugin: 'android-test'
+apply plugin: 'jacoco'
+apply plugin: 'sonar-runner'
 
 android {
     compileSdkVersion 19
@@ -25,6 +28,14 @@ android {
     }
 }
 
+// Repositories which contain the libraries necessary for the project to build
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // Libraries which are necessary for compilation
@@ -42,10 +53,8 @@ dependencies {
     instrumentTestCompile 'com.squareup:fest-android:1.0.+'
 }
 
-
 // Static Code Analysis
 // Configuration of the sonarRunner task (the task itself is provided by the sonar-runner plugin)
-// SonarQube must be installed on the system where the sonarRunner task is run!
 sonarRunner {
     sonarProperties {
         property "sonar.host.url", "$System.env.SONAR_URL"
