@@ -17,23 +17,15 @@ To change the java version which is used:
 
 Download and install [Android Studio](http://developer.android.com/sdk/installing/studio.html).
 
-Download [Gradle version 1.8](http://www.gradle.org/downloads). Extract it to some folder, e.g. ~/Dev.
+Android Studio ships with its own copy of the Android SDK. Make sure the latest SDK is installed.
 
-Android Studio ships with its own copy of the Android SDK. Start the SDK manager and install Android SDK Buid-tools 18.1.1. Also install everything from Android 4.3 (API 18) except for the ARM EABI v7a System Image. 
+Make sure the ANDROID_HOME environment variable is set correctly. Open your .bashrc and add the following line to the end of the file:
 
-Setup Gradle
-------------
-Open your .bashrc and add the following line to the end of the file:
-
-	export PATH=$PATH:/home/<username>/Dev/gradle-1.8/bin
+	export ANDROID_HOME=/path/to/android-studio/sdk/
 
 Then reload your .bashrc:
 
 	source ~/.bashrc
-
-Make Android Studio use your local gradle distribution:
-
-	Android Studio -> File -> Settings -> Gradle -> Use local gradle distribution = ~/Dev/gradle1.8/
 
 Create the project
 ------------------
