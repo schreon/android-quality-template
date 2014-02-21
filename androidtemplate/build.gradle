@@ -16,8 +16,57 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    // This makes Android Studio recognize the test folder as correct java module.
+    sourceSets {
+        instrumentTest {
+            root 'src/test'
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Libraries which are necessary for compilation
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.google.code.gson:gson:2.2.+'
+
+    // Libraries which are necessary for unit testing
+    testCompile 'junit:junit:4.10'
+    testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    testCompile 'com.squareup:fest-android:1.0.+'
+
+    // This is needed so Android Studio recognizes the imports in the test source folders
+    instrumentTestCompile 'junit:junit:4.10'
+    instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+    instrumentTestCompile 'com.squareup:fest-android:1.0.+'
 }
+
+
+// Static Code Analysis
+// Configuration of the sonarRunner task (the task itself is provided by the sonar-runner plugin)
+// SonarQube must be installed on the system where the sonarRunner task is run!
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "$System.env.SONAR_URL"
+        property "sonar.jdbc.url", "$System.env.SONAR_JDBC_URL"
+        property "sonar.jdbc.driverClassName", "$System.env.SONAR_JDBC_DRIVER"
+        property "sonar.jdbc.username", "$System.env.SONAR_JDBC_USER"
+        property "sonar.jdbc.password", "$System.env.SONAR_JDBC_PASSWORD"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src/main/java"
+        property "sonar.binaries", "build/classes"
+        property "sonar.tests", "src/test/java"
+        property "sonar.dynamicAnalysis", "reuseReports"
+        property "sonar.junit.reportsPath", file("$buildDir/test-results")
+
+        // To provide information about code coverage, the results of the unit tests are needed
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPath", "build/jacoco/testDebug.exec"
+    }
+}
+
+// remove dependencies, so sonarRunner starts even if tests fail
+tasks.sonarRunner.dependsOn = []
+// do not stop if a test fails
+test.ignoreFailures = true
